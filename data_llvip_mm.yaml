@@ -1,0 +1,22 @@
+# LLVIP 多模态数据集配置（RGB + 红外，夜间）
+# 数据集下载与划分说明见 scripts/download_datasets.md
+# 请将 path 改为你本地的数据集根目录
+
+# 数据集根目录
+path: /path/to/LLVIP_split
+
+train: ./images/train   # RGB 训练图像目录
+val: ./images/val       # RGB 验证图像目录
+test: ./images/test     # RGB 测试图像目录
+
+# 多模态路径配置
+modality:
+  rgb: images       # RGB 可见光图像模态路径
+  ir: images_ir     # 红外图像模态路径
+
+# 当前使用的模态组合：RGB + 红外
+modality_used: ["rgb", "ir"]
+
+# 类别信息（LLVIP 官方标注为 person，可按你的标注扩展）
+names:
+  0: person

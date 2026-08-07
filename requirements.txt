@@ -1,0 +1,14 @@
+# SpectraGate 依赖清单
+# 论文实验环境: PyTorch 2.8.0, 单卡 RTX 5090（CUDA 12.x 均可）
+torch>=2.1.0
+torchvision>=0.16.0
+opencv-python>=4.6.0
+numpy>=1.23.0
+PyYAML>=5.3.1
+pandas>=1.1.4
+matplotlib>=3.3.0
+scipy>=1.4.1
+tqdm>=4.64.0
+psutil
+py-cpuinfo
+requests
