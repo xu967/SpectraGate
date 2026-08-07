@@ -5,16 +5,16 @@
 ## 对应关系总览
 
 论文：SpectraGate: Learnable Band Decomposition and State-Regularized Fusion for Visible-Infrared Object Detection
-代码：本仓库，Ultralytics YOLO11 多模态改版，核心配置 `yolo11n-mm-mbsg-cm-cascade-V5.yaml`
+代码：本仓库，SpectraGate YOLO11 多模态改版，核心配置 `yolo11n-mm-mbsg-cm-cascade-V5.yaml`
 
 | 论文组件 | 论文章节/公式 | 代码实现 | 代码位置 |
 |---|---|---|---|
-| 双分支骨干 RGB/IR | Stage 1，Eq. (1) | YAML backbone 双路（RGB 层 0-10，X 层 11-21），MultiModalRouter 按 `'RGB'`/`'X'` 标签路由 | `ultralytics/cfg/models/mm/11/yolo11n-mm-mbsg-cm-cascade-V5.yaml`；`ultralytics/nn/mm/router.py` |
-| LMSG 模态内多频带谱门控 | Section III-C，Eq. (3)-(4) | LFEM_D_V5 低频增强模块，内含 _MBSG_V2 多频带谱门控 | `ultralytics/nn/modules/fusion/fredft.py`（LFEM_D_V5、_MBSG_V2） |
-| CPSE 共轭交叉功率谱增强 | Section III-D，Eq. (5)-(7) | NLFEM_D_V5 非局部频率增强模块，跨谱共轭注意力 | `ultralytics/nn/modules/fusion/fredft.py`（NLFEM_D_V5） |
-| CCSF 跨模态共轭谱融合 | Section III-E，Eq. (8)-(10) | FDFTM_V6，含 _CMFCA_V4 共轭跨谱注意力 + _FDFFN + 拼接投影 | `ultralytics/nn/modules/fusion/fredft.py`（FDFTM_V6、_CMFCA_V4、_FDFFN） |
-| 可学习频带分解 | Section III-B，Eq. (2) | _MBSG_V2 内可学习截止频率，sigmoid 标量；parse_model 支持注入 fixed_cutoff | `ultralytics/nn/modules/fusion/fredft.py`；`ultralytics/nn/tasks.py` |
-| FSCL 状态约束损失 | Section III-F，Eq. (11)-(16) | v8DetectionLossFusionV2 包装检测损失，收集 spectral/gate/cutoff 三项正则化；_FusionRegularizationMixin 提供正则化标量 | `ultralytics/utils/loss.py`；`ultralytics/nn/modules/fusion/fredft.py` |
+| 双分支骨干 RGB/IR | Stage 1，Eq. (1) | YAML backbone 双路（RGB 层 0-10，X 层 11-21），MultiModalRouter 按 `'RGB'`/`'X'` 标签路由 | `spectragate/cfg/models/mm/11/yolo11n-mm-mbsg-cm-cascade-V5.yaml`；`spectragate/nn/mm/router.py` |
+| LMSG 模态内多频带谱门控 | Section III-C，Eq. (3)-(4) | LFEM_D_V5 低频增强模块，内含 _MBSG_V2 多频带谱门控 | `spectragate/nn/modules/fusion/fredft.py`（LFEM_D_V5、_MBSG_V2） |
+| CPSE 共轭交叉功率谱增强 | Section III-D，Eq. (5)-(7) | NLFEM_D_V5 非局部频率增强模块，跨谱共轭注意力 | `spectragate/nn/modules/fusion/fredft.py`（NLFEM_D_V5） |
+| CCSF 跨模态共轭谱融合 | Section III-E，Eq. (8)-(10) | FDFTM_V6，含 _CMFCA_V4 共轭跨谱注意力 + _FDFFN + 拼接投影 | `spectragate/nn/modules/fusion/fredft.py`（FDFTM_V6、_CMFCA_V4、_FDFFN） |
+| 可学习频带分解 | Section III-B，Eq. (2) | _MBSG_V2 内可学习截止频率，sigmoid 标量；parse_model 支持注入 fixed_cutoff | `spectragate/nn/modules/fusion/fredft.py`；`spectragate/nn/tasks.py` |
+| FSCL 状态约束损失 | Section III-F，Eq. (11)-(16) | v8DetectionLossFusionV2 包装检测损失，收集 spectral/gate/cutoff 三项正则化；_FusionRegularizationMixin 提供正则化标量 | `spectragate/utils/loss.py`；`spectragate/nn/modules/fusion/fredft.py` |
 | FPN + 多尺度检测头 | Stage 3 | YAML head 层 30-42，PAN 风格 + Detect 头 | `yolo11n-mm-mbsg-cm-cascade-V5.yaml` head 段 |
 
 ## 层级部署映射
@@ -43,7 +43,7 @@ FSCL 三项正则化与论文公式对应：spectral 对应 R_spec 与 R_out，g
 
 ## 数据加载
 
-- 多模态数据由 `YOLOMultiModalImageDataset` 加载（`ultralytics/data/dataset.py`）
+- 多模态数据由 `YOLOMultiModalImageDataset` 加载（`spectragate/data/dataset.py`）
 - 数据 YAML 用 `modality_used` 与 `modality` 字段配置 rgb/ir 双目录
 - 推理时缺省模态自动零填充（`predictMM.py` 不传 `--ir` 时）
 

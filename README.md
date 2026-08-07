@@ -8,7 +8,6 @@ SpectraGate 是一个面向可见光-红外（RGB-IR）目标检测的频带感�
 |---|---|
 | 论文 | *SpectraGate: Learnable Band Decomposition and State-Regularized Fusion for Visible-Infrared Object Detection*（投稿中） |
 | 任务 | RGB-Infrared Object Detection（DroneVehicle / LLVIP） |
-| 基底框架 | [Ultralytics YOLO11](https://github.com/ultralytics/ultralytics)（AGPL-3.0） |
 | 许可证 | [AGPL-3.0](LICENSE) |
 
 ## 方法概览
@@ -34,7 +33,7 @@ IR ─────┴───► │ 带谱门控  │→│ 谱增强(双向) 
 SpectraGate/
 ├── trainMM.py / valMM.py / predictMM.py / visMM.py / main_profile.py   # 训练/验证/推理/可视化入口
 ├── data_drone_mm.yaml / data_llvip_mm.yaml                             # 数据集配置
-├── ultralytics/                                                        # 基于 8.3.163 的改版框架
+├── spectragate/                                                        # SpectraGate 检测框架
 │   └── nn/modules/fusion/fredft.py                                     # 核心：LMSG / CPSE / CCSF / FSCL
 ├── docs/paper_code_mapping.md                                          # 论文公式 ↔ 代码位置映射
 └── scripts/download_datasets.md                                        # 数据集下载指引
@@ -104,13 +103,13 @@ python visMM.py --weights best.pt --rgb img_rgb.png --ir img_ir.png --method fea
 
 | 论文组件 | 论文公式 | 代码类 | 代码位置 |
 |---|---|---|---|
-| 可学习频带分解 | Eq. (2)，`c_f = σ(θ_c)` | `_MBSG_V2._get_band_masks` / `_CMFCA_V4` | `ultralytics/nn/modules/fusion/fredft.py` |
+| 可学习频带分解 | Eq. (2)，`c_f = σ(θ_c)` | `_MBSG_V2._get_band_masks` / `_CMFCA_V4` | `spectragate/nn/modules/fusion/fredft.py` |
 | LMSG 模态内多频带谱门控 | Eq. (3)-(4) | `LFEM_D_V5`（内含 `_MBSG_V2`） | `fredft.py` |
 | CPSE 共轭交叉功率谱增强 | Eq. (5)-(7) | `NLFEM_D_V5` | `fredft.py` |
 | CCSF 跨模态共轭谱融合 | Eq. (8)-(10) | `FDFTM_V6`（内含 `_CMFCA_V4`、`_FDFFN`） | `fredft.py` |
-| FSCL 状态约束损失 | Eq. (11)-(16) | `v8DetectionLossFusionV2` + `_FusionRegularizationMixin` | `ultralytics/utils/loss.py`；`fredft.py` |
-| 双分支骨干 + 渐进级联部署 | Stage 1/2，P3/P4/P5 | `yolo11n-mm-mbsg-cm-cascade-V5.yaml` | `ultralytics/cfg/models/mm/11/` |
-| 多模态数据路由 | Stage 1 | `MultiModalRouter` / `YOLOMultiModalImageDataset` | `ultralytics/nn/mm/router.py`；`ultralytics/data/dataset.py` |
+| FSCL 状态约束损失 | Eq. (11)-(16) | `v8DetectionLossFusionV2` + `_FusionRegularizationMixin` | `spectragate/utils/loss.py`；`fredft.py` |
+| 双分支骨干 + 渐进级联部署 | Stage 1/2，P3/P4/P5 | `yolo11n-mm-mbsg-cm-cascade-V5.yaml` | `spectragate/cfg/models/mm/11/` |
+| 多模态数据路由 | Stage 1 | `MultiModalRouter` / `YOLOMultiModalImageDataset` | `spectragate/nn/mm/router.py`；`spectragate/data/dataset.py` |
 
 详细映射见 `docs/paper_code_mapping.md`。
 
@@ -129,7 +128,7 @@ python visMM.py --weights best.pt --rgb img_rgb.png --ir img_ir.png --method fea
 
 ## 许可证
 
-本项目基于 [Ultralytics YOLO11](https://github.com/ultralytics/ultralytics)（AGPL-3.0）构建，采用 [AGPL-3.0](LICENSE) 协议发布。LMSG、CPSE、CCSF、FSCL 等融合模块为本项目原创代码。使用时请保留原始版权声明；商用前请确认 AGPL-3.0 对你的使用场景的适用性。
+本项目采用 [AGPL-3.0](LICENSE) 协议发布。LMSG、CPSE、CCSF、FSCL 等融合模块为本项目原创代码。使用时请保留原始版权声明；商用前请确认 AGPL-3.0 对你的使用场景的适用性。
 
 ## 联系
 

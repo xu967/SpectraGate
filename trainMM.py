@@ -13,10 +13,10 @@ from pathlib import Path
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 
-from ultralytics import YOLOMM
+from spectragate import YOLOMM
 
 ROOT = Path(__file__).resolve().parent
-DEFAULT_MODEL = ROOT / "ultralytics/cfg/models/mm/11/yolo11n-mm-mbsg-cm-cascade-V5.yaml"
+DEFAULT_MODEL = ROOT / "spectragate/cfg/models/mm/11/yolo11n-mm-mbsg-cm-cascade-V5.yaml"
 
 
 def main():

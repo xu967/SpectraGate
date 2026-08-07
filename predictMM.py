@@ -7,7 +7,7 @@
 # ============================================================
 import argparse
 
-from ultralytics import YOLOMM
+from spectragate import YOLOMM
 
 
 def main():

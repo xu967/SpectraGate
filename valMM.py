@@ -6,7 +6,7 @@
 import argparse
 from pathlib import Path
 
-from ultralytics import YOLOMM
+from spectragate import YOLOMM
 
 ROOT = Path(__file__).resolve().parent
 
